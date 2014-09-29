@@ -1,0 +1,15 @@
+#**/*~
+#**/*.*_ 
+#!**/*.c 
+*.c_
+*~
+*.*c_
+*/*
+!.c
+!scripts/*make
+!scripts/add-ignored
+!*.h
+!*.c
+!*.a
+!CUnit*/*
+!*/README
