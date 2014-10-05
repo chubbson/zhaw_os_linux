@@ -137,7 +137,7 @@ int yum(ringbuffer* rb)
 
 // Start produce thread
 // produces 1000 Items
-void* prod_start(void *args)
+void *prod_start(void *args)
 {
   struct thread_info *tinfo = args;
   printf("Producer-thread '%d' started: rbidx=%d;\n",
@@ -150,13 +150,14 @@ void* prod_start(void *args)
     printf("Thread %d [Produces]: i_idx %d; rand %d \n",tinfo->thread_num, i,rval);
     speih(tinfo->thread_num,rval,tinfo->rb);
   }
+
+  return NULL;
 }
 
 // Start consumer thread. 
 // consumes 1000 Items
 void* cons_start(void *args)
 {
-
   struct thread_info *tinfo = args;
   printf("Consumer-thread '%d' started: rbidx=%d;\n",
            tinfo->thread_num, tinfo->rb->prodidx);
@@ -167,12 +168,12 @@ void* cons_start(void *args)
     rval = yum(tinfo->rb);
     printf("Thread %d [consumes]: i_idx %d; val %d \n",tinfo->thread_num, i,rval);
   }
+  return NULL;
 }
 
 // Main function. start consumer produce thread and let they do their work
 int main(int argc, char const *argv[])
 {
-  pthread_t idP; 
   int i, ptcres; 
   struct thread_info *tinfo;
   void  *res; 
@@ -181,7 +182,7 @@ int main(int argc, char const *argv[])
   srand(time(NULL));
 
   // initialize ringbuffer with index 0 and fill 0
-  ringbuffer rb = { 0, 0, 0 };
+  ringbuffer rb = { 0, 0 };
 
   // Initialize semaphores
   sem_init(&rb.emptyslots, 0, BUFFERSIZE); // threadshared has buffersize empty slots
