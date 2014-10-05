@@ -8,6 +8,9 @@
 #Execution
 ==========
 *run normal*
-./ringbuffer
+
+- ./ringbuffer
+
 *run with errorcode*
-./prodconsringbuffer
+
+- ./prodconsringbuffer
