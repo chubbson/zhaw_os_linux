@@ -13,3 +13,4 @@
 !*.a
 !CUnit*/*
 !*/README
+!*/*.md
