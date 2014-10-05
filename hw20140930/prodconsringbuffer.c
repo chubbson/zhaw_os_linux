@@ -131,7 +131,6 @@ int yum(ringbuffer* rb)
   // incremet the number of empty slots
   sem_post(&(rb->emptyslots));
   usleep(rand()%10000); // 1'000'000 = 1s => 10'000 = 0.01s
-
   return res;
 } 
 
