@@ -1,10 +1,13 @@
 #Makefile
+==========
 ../scripts/create-make > makefile
--make 
--make all
--make clean
+- make 
+- make all
+- make clean
 
-# run normal
+#Execution
+==========
+*run normal*
 ./ringbuffer
-# run with errorcode
+*run with errorcode*
 ./prodconsringbuffer
