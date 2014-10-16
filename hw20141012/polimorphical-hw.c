@@ -14,8 +14,10 @@ void usage(char *argv0, char *text) {
   exit(1);
 }
 
+#define PI 3.14159265358979323846
+
 typedef struct shape shape;
-typedef struct stape_vtbl shape_vtbl;
+typedef struct shape_vtbl shape_vtbl;
 
 struct shape_vtbl{
 	double (*area)(shape const *s);
@@ -65,7 +67,7 @@ struct circle_vtbl {
 static circle_vtbl the_circle_vtbl = {
 	circle_area, 
 	circle_cercumference
-}
+};
 
 void circle_construct(circle *c, double r){
 	shape_construct(&c->base);
