@@ -17,14 +17,22 @@ void usage(char *argv0, char *text) {
 
 #define PI 3.14159265358979323846
 
-static shape_vtbl the_shape_vtbl = {
+
+double shape_area(shape const *s)
+{
+	return 0; 
+}
+
+double shape_cercumference(shape const *s)
+{
+	return 0;
+}
+
+shape_vtbl the_shape_vtbl = {
 	shape_area,
 	shape_cercumference
 };
 
-void shape_construct(shape *s) {
-	s->vptr = &the_shape_vtbl;
-}
 
 typedef struct circle circle;
 struct circle {
@@ -46,7 +54,7 @@ double circle_cercumference(circle const *c){
 typedef struct circle_vtbl circle_vtbl;
 struct circle_vtbl {
 	double (*area)(circle const *);
-	double (*perimeter)(circle const *);
+	double (*cercumference)(circle const *);
 };
 
 static circle_vtbl the_circle_vtbl = {
@@ -64,6 +72,25 @@ void circle_construct(circle *c, double r){
 int main(int argc, char const *argv[])
 {
 	printf("%s\n", "trest");
+
+	//circle c;
+
+  	//struct circle *c = malloc(sizeof(struct circle));
+  	//c = calloc(1, sizeof(struct circle));
+
+	circle c;
+//	(&c)->radius = 3;
+
+	//circ.radius = 0;
+	//circ.radius = 2;
+	circle_construct(&c,3);
+	double ar = circle_area(&c);
+	double circum = circle_cercumference(&c);
+
+	printf("Circle: r: %f A: %f U: %f\n", c.radius, ar, circum);// c[0].radius);
+
+	//free(c);
+
 	return 0;
 }
 /*
