@@ -24,10 +24,9 @@ struct shape_vtbl{
 
 struct shape {  
 	shape_vtbl *vptr;
-	color outline, fill;
 };
 
-void shape_construct(shape *s, color 0);
+void shape_construct(shape *s);
 double shape_area(shape const *s);
 double shape_cercumference(shape const *s);
 
@@ -36,9 +35,8 @@ static shape_vtbl the_shape_vtbl = {
 	shape_cercumference
 };
 
-void shape_construct(shape *s, color o) {
+void shape_construct(shape *s) {
 	s->vptr = &the_shape_vtbl;
-	s->outline = o
 }
 
 typedef struct circle circle;
@@ -47,7 +45,7 @@ struct circle {
 	double radius;
 };
 
-void circle_construct(circle *c, double r, color o);
+void circle_construct(circle *c, double r);
 
 double circle_area(circle const *c)
 {
@@ -69,12 +67,18 @@ static circle_vtbl the_circle_vtbl = {
 	circle_cercumference
 }
 
-void circle_construct(circle *c, double r, color o){
-	shape_construct(&c->base, o);
+void circle_construct(circle *c, double r){
+	shape_construct(&c->base);
 	c->base.vptr = (shape_vtbl *)&the_circle_vtbl;
 	c->radius = r;
 }
 
+
+int main(int argc, char const *argv[])
+{
+	printf("%s\n", "trest");
+	return 0;
+}
 /*
 struct int_data {
   fun function;
