@@ -6,6 +6,7 @@
 #include <sys/time.h>
 #include <string.h>
 #include "shape.h"
+#include "circle.h"
 
 void usage(char *argv0, char *text) {
   printf("%s\n", text);
@@ -18,32 +19,32 @@ void usage(char *argv0, char *text) {
 #define PI 3.14159265358979323846
 
 
+// Shape function
 double shape_area(shape const *s)
 {
-	return 0; 
+	return s->vptr->area(s);
 }
 
 double shape_cercumference(shape const *s)
 {
-	return 0;
+	return s->vptr->circumference(s);
+}
+
+void shape_print(shape const *s)
+{
+	printf("shape - A: %f U: %f -> ", shape_area(s), shape_cercumference(s));
+	s->vptr->print(s);
 }
 
 shape_vtbl the_shape_vtbl = {
 	shape_area,
-	shape_cercumference
+	shape_cercumference,
+	shape_print
 };
 
 
-typedef struct circle circle;
-struct circle {
-	shape base;
-	double radius;
-};
-
-void circle_construct(circle *c, double r);
-
-double circle_area(circle const *c)
-{
+// Circle functions
+double circle_area(circle const *c){
 	return PI * c->radius * c->radius;
 }
 
@@ -51,15 +52,21 @@ double circle_cercumference(circle const *c){
 	return 2*PI * c->radius;
 }
 
+void circle_print(circle const *c){
+	printf("circle - r: %f\n", c->radius);
+}
+
 typedef struct circle_vtbl circle_vtbl;
 struct circle_vtbl {
 	double (*area)(circle const *);
 	double (*cercumference)(circle const *);
+	void (*print)(circle const *);
 };
 
 static circle_vtbl the_circle_vtbl = {
 	circle_area, 
-	circle_cercumference
+	circle_cercumference,
+	circle_print
 };
 
 void circle_construct(circle *c, double r){
@@ -67,6 +74,7 @@ void circle_construct(circle *c, double r){
 	c->base.vptr = (shape_vtbl *)&the_circle_vtbl;
 	c->radius = r;
 }
+
 
 
 int main(int argc, char const *argv[])
@@ -78,16 +86,17 @@ int main(int argc, char const *argv[])
   	//struct circle *c = malloc(sizeof(struct circle));
   	//c = calloc(1, sizeof(struct circle));
 
-	circle c;
-//	(&c)->radius = 3;
+	circle c1;
+	circle c2;
+	circle_construct(&c1,3);
+	circle_construct(&c2,4);
+	double ar = shape_area((shape *)&c1);
+	double circum = circle_cercumference(&c1);
 
-	//circ.radius = 0;
-	//circ.radius = 2;
-	circle_construct(&c,3);
-	double ar = circle_area(&c);
-	double circum = circle_cercumference(&c);
-
-	printf("Circle: r: %f A: %f U: %f\n", c.radius, ar, circum);// c[0].radius);
+    circle_print(&c1);
+    shape_print((shape *)&c1);
+	printf("Circle: r: %f A: %f U: %f\n", c1.radius, ar, circle_cercumference(&c1));// c[0].radius);
+	printf("Circle: r: %f A: %f U: %f\n", c2.radius, circle_area(&c2), circle_cercumference(&c2));// c[0].radius);
 
 	//free(c);
 
