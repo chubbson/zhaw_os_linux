@@ -4,13 +4,13 @@
 #include "shape.h"
 
 typedef struct triangle triangle;
-struct trianlge {
+struct triangle {
 	shape base;
-	double vara;
-	double varb;
-	double varc;
+	double sidea;
+	double sideb;
+	double sidec;
 };
 
-void circle_construct(circle *c, double a, double b, double c);
+void trianlge_construct(triangle *t, double a, double b, double c);
 
 #endif

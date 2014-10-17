@@ -11,13 +11,5 @@ struct circle {
 };
 
 void circle_construct(circle *c, double r);
-/*{
-	shape_construct(&c->base);
-	c->base.vptr = (shape_vtbl *)&the_circle_vtbl;
-	c->radius = r;
-}*/
-/*
-double circle_area(circle const *c);
-double circle_cercumference(circle const *c);
-*/
+
 #endif

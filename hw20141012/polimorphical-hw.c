@@ -7,6 +7,8 @@
 #include <string.h>
 #include "shape.h"
 #include "circle.h"
+#include "triangle.h"
+#include "square.h"
 
 void usage(char *argv0, char *text) {
   printf("%s\n", text);
@@ -75,6 +77,74 @@ void circle_construct(circle *c, double r){
 	c->radius = r;
 }
 
+// square functions
+double square_area(square const *s){
+	return s->sidea * s->sidea;
+}
+
+double square_cercumference(square const *s){
+	return 4*s->sidea;
+}
+
+void square_print(square const *s){
+	printf("square - a: %f\n", s->sidea);
+}
+
+typedef struct square_vtbl square_vtbl;
+struct square_vtbl {
+	double (*area)(square const *);
+	double (*cercumference)(square const *);
+	void (*print)(square const *);
+};
+
+static square_vtbl the_square_vtbl = {
+	square_area, 
+	square_cercumference,
+	square_print
+};
+
+void square_construct(square *s, double a){
+	shape_construct(&s->base);
+	s->base.vptr = (shape_vtbl *)&the_square_vtbl;
+	s->sidea = a;
+}
+
+// triangle functions
+double triangle_area(triangle const *t){
+	double s = ((t->sidea)+(t->sideb)+(t->sidec))/2;
+	return sqrt(s*(s-t->sidea)*(s-t->sideb)*(s-t->sidec));
+}
+
+double triangle_cercumference(triangle const *t){
+	return t->sidea + t->sideb + t->sidec;
+}
+
+void triangle_print(triangle const *t){
+	printf("triangle - a: %f b: %f c: %f\n", t->sidea, t->sideb, t->sidec);
+}
+
+typedef struct triangle_vtbl triangle_vtbl;
+struct triangle_vtbl {
+	double (*area)(triangle const *);
+	double (*cercumference)(triangle const *);
+	void (*print)(triangle const *);
+};
+
+static triangle_vtbl the_triangle_vtbl = {
+	triangle_area, 
+	triangle_cercumference,
+	triangle_print
+};
+
+void triangle_construct(triangle *t, double a, double b, double c){
+	shape_construct(&t->base);
+	t->base.vptr = (shape_vtbl *)&the_triangle_vtbl;
+	t->sidea = a;
+	t->sideb = b;
+	t->sidec = c;
+}
+
+// rectangle funcgtions
 
 
 int main(int argc, char const *argv[])
@@ -88,14 +158,20 @@ int main(int argc, char const *argv[])
 
 	circle c1;
 	circle c2;
+	square s1;
+	triangle t1;
 	circle_construct(&c1,3);
 	circle_construct(&c2,4);
-	double ar = shape_area((shape *)&c1);
-	double circum = circle_cercumference(&c1);
+	square_construct(&s1,5);
+	triangle_construct(&t1,2,3,4);
+	//double ar = shape_area((shape *)&c1);
+	//double circum = circle_cercumference(&c1);
 
     circle_print(&c1);
     shape_print((shape *)&c1);
-	printf("Circle: r: %f A: %f U: %f\n", c1.radius, ar, circle_cercumference(&c1));// c[0].radius);
+    shape_print((shape *)&t1);
+    shape_print((shape *)&s1);
+	printf("Circle: r: %f A: %f U: %f\n", c1.radius, circle_area(&c1), circle_cercumference(&c1));// c[0].radius);
 	printf("Circle: r: %f A: %f U: %f\n", c2.radius, circle_area(&c2), circle_cercumference(&c2));// c[0].radius);
 
 	//free(c);

@@ -4,11 +4,11 @@
 #include "shape.h"
 
 typedef struct square square;
-struct circle {
+struct square {
 	shape base;
-	double side;
+	double sidea;
 };
 
-void square_construct(square *c, double a);
+void square_construct(square *s, double a);
 
 #endif
