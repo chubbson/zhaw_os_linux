@@ -4,6 +4,10 @@
 - make all
 - make clean
 
+#Execution
+*run normal*
+
+- ./polimorphical-hw
 
 #Command: 
 ls					=> list file in current dir

@@ -1,3 +1,11 @@
+/**
+ * Author: David Hauri 
+ * Thema: polimorph sample in c
+ * gcc Sample: gcc polimorphical-hw.c -o polimorphical-hw -lm
+ * HINT: DONT Miss the -lm directive!!
+ */
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -10,15 +18,9 @@
 #include "triangle.h"
 #include "square.h"
 
-void usage(char *argv0, char *text) {
-  printf("%s\n", text);
-  printf("\n\nUsage:\n\n%s F A B N ID\n\n", argv0);
-  printf("calculates integral of F from A to B of F() with N steps\n");
-  printf("F must be one of sin cos tan cot sec csc exp log sqr cub\n");
-  exit(1);
-}
-
+// define PI
 #define PI 3.14159265358979323846
+#define ARRAYCNT 10
 
 
 // Shape function
@@ -111,7 +113,7 @@ void square_construct(square *s, double a){
 
 // triangle functions
 double triangle_area(triangle const *t){
-	double s = ((t->sidea)+(t->sideb)+(t->sidec))/2;
+	double s = ((t->sidea)+(t->sideb)+(t->sidec))/2.0;
 	return sqrt(s*(s-t->sidea)*(s-t->sideb)*(s-t->sidec));
 }
 
@@ -142,26 +144,88 @@ void triangle_construct(triangle *t, double a, double b, double c){
 	t->sidea = a;
 	t->sideb = b;
 	t->sidec = c;
+	while(isnan(triangle_area(t)))
+		// choose new random number area could not be calculated
+	{
+		t->sidea = rand()%15;
+		t->sideb = rand()%15;
+		t->sidec = rand()%15;
+	}
 }
 
-// rectangle funcgtions
+struct shapelink {
+	shape *s;
+	struct shapelink *next; 
+};
 
+void fill_shapellist(struct shapelink *sl, int ncount){
+	switch(rand()%3)
+	{
+		case 0: 
+			sl->s = malloc(sizeof(struct circle));
+			circle_construct((struct circle *)sl->s, rand()%15);
+		break;
+		case 1:
+			sl->s = malloc(sizeof(struct square));
+			square_construct((struct square *)sl->s, rand()%15);
+		break;
+		case 2: 
+			sl->s = malloc(sizeof(struct triangle));
+			triangle_construct((struct triangle *)sl->s, rand()%15, rand()%15, rand()%15);
+		break; 
+	}
+	ncount--;
+	if(ncount > 0)
+	{
+		sl->next = malloc(sizeof(struct shapelink));
+		fill_shapellist(sl->next, ncount); 
+	}
+	else
+	{
+		sl->next = 0;
+		return;
+	}
 
+}
+
+void free_shapellist(struct shapelink *sl){
+	if(sl->next != 0)
+	{
+		free_shapellist(sl->next);
+		free(sl->next);
+		sl->next = 0; 
+	}
+	free(sl->s);
+	sl->s = 0; 
+}
+
+void print_shapellist(struct shapelink *sl){
+	shape_print(sl->s);
+	if(sl->next != 0)
+	{
+		print_shapellist(sl->next);
+	}
+}
+
+double shapellist_area(struct shapelink *sl, double akk) {
+	if(sl->next != 0)
+	{
+		printf("%d - %d - %d\n", akk, shape_area(sl->s), shape_area(sl->s)+akk);
+		return shapellist_area(sl->next, shape_area(sl->s)+akk);
+	}
+	return akk;
+}
+
+// Main method
 int main(int argc, char const *argv[])
 {
-	printf("%s\n", "trest");
-
-	//circle c;
-
   	//struct circle *c = malloc(sizeof(struct circle));
   	//c = calloc(1, sizeof(struct circle));
 
 	circle c1;
-	circle c2;
 	square s1;
 	triangle t1;
 	circle_construct(&c1,3);
-	circle_construct(&c2,4);
 	square_construct(&s1,5);
 	triangle_construct(&t1,2,3,4);
 	//double ar = shape_area((shape *)&c1);
@@ -171,41 +235,55 @@ int main(int argc, char const *argv[])
     shape_print((shape *)&c1);
     shape_print((shape *)&t1);
     shape_print((shape *)&s1);
-	printf("Circle: r: %f A: %f U: %f\n", c1.radius, circle_area(&c1), circle_cercumference(&c1));// c[0].radius);
-	printf("Circle: r: %f A: %f U: %f\n", c2.radius, circle_area(&c2), circle_cercumference(&c2));// c[0].radius);
+
+    // allocate memory for an aray of circles
+    struct circle *circles = calloc(ARRAYCNT, sizeof(struct circle));
+
+	// seed random sequence
+	srand(time(NULL));
+    int i = 0;
+    double sumar = 0; 
+    for (i = 0; i < ARRAYCNT; ++i)
+    {
+    	//Create each circle
+    	circle_construct((&circles[i]), rand()%15);
+    	// print each circle
+    	shape_print((shape *)&circles[i]);
+    	// calc overall shape area of all circles
+    	sumar += shape_area((shape *)&circles[i]);;
+    }
+    // print overall shape area
+	printf("sum area%f\n",sumar );
+
+    free(circles);	
+
+    /*
+    shape** shapearr = calloc(8, sizeof(*shapearr));
+    shape *sarr = calloc(10, )
+*/
+    struct shapelink *root;
+    struct shapelinke *actitem;
+
+    root = malloc(sizeof(struct shapelink));
+    fill_shapellist(root, 5);
+
+    print_shapellist(root);
+    print_shapellist(root);
+
+    double *akku = malloc(sizeof(double));
+    *akku = 9;
+    printf("%d\n", akku);
+
+//    root->next = 0;
+//    root->s = malloc(sizeof(struct square));
+    printf("%s %d \n", "sementation fault where are u?",shapellist_area(root,0));
+     
+    printf("%s %d \n", "sementation fault where are u?",3);
+    free_shapellist(root);
+
+    free(akku);
+
 
 	//free(c);
-
 	return 0;
 }
-/*
-struct int_data {
-  fun function;
-  double a;
-  double b;
-  int n;
-};
-
-struct 
-
-double cot(double x) {
-  return cos(x)/sin(x);
-}
-
-void create_triangle(int a, int b, int ) {
-
-
-}
-
-void create_square(int a) {
-
-}
-
-void create_circule(int r) {
-
-}
-
-double area(struct shape *shape) {}
-double circumference(struct shape *shape) {}
-double simpson(struct int_data *data) {
-	*/
