@@ -12,5 +12,6 @@
 !*.c
 !*.a
 !CUnit*/*
+!makefile
 !*/README
 !*/*.md
