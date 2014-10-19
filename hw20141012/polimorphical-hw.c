@@ -20,26 +20,29 @@
 
 // define PI
 #define PI 3.14159265358979323846
-#define ARRAYCNT 10
+#define ARRAYCNT 5
 
 
-// Shape function
+// base shape area function, calls area on vptr
 double shape_area(shape const *s)
 {
 	return s->vptr->area(s);
 }
 
+// base shape cercumference function, calls cercumfeerence on vptr
 double shape_cercumference(shape const *s)
 {
 	return s->vptr->circumference(s);
 }
 
+// base print function, calls print on vptr
 void shape_print(shape const *s)
 {
 	printf("shape - A: %f U: %f -> ", shape_area(s), shape_cercumference(s));
 	s->vptr->print(s);
 }
 
+// defines base 'function' in header outsources struct 
 shape_vtbl the_shape_vtbl = {
 	shape_area,
 	shape_cercumference,
@@ -195,6 +198,7 @@ void free_shapellist(struct shapelink *sl){
 		free(sl->next);
 		sl->next = 0; 
 	}
+	// probably leaks memory cuz type of s is shape and not circle||triangle||shape
 	free(sl->s);
 	sl->s = 0; 
 }
@@ -207,11 +211,18 @@ void print_shapellist(struct shapelink *sl){
 	}
 }
 
-double shapellist_area(struct shapelink *sl, double akk) {
+double area_shapellist(struct shapelink *sl, double akk) {
 	if(sl->next != 0)
 	{
-		printf("%d - %d - %d\n", akk, shape_area(sl->s), shape_area(sl->s)+akk);
-		return shapellist_area(sl->next, shape_area(sl->s)+akk);
+		return area_shapellist(sl->next, shape_area(sl->s)+akk);
+	}
+	return akk;
+}
+
+double circumference_shapellist(struct shapelink *sl, double akk) {
+	if(sl->next != 0)
+	{
+		return circumference_shapellist(sl->next, shape_cercumference(sl->s)+akk);
 	}
 	return akk;
 }
@@ -219,18 +230,15 @@ double shapellist_area(struct shapelink *sl, double akk) {
 // Main method
 int main(int argc, char const *argv[])
 {
-  	//struct circle *c = malloc(sizeof(struct circle));
-  	//c = calloc(1, sizeof(struct circle));
-
+  	printf("Polimorph - test objects");
 	circle c1;
 	square s1;
 	triangle t1;
 	circle_construct(&c1,3);
 	square_construct(&s1,5);
 	triangle_construct(&t1,2,3,4);
-	//double ar = shape_area((shape *)&c1);
-	//double circum = circle_cercumference(&c1);
 
+	printf("Print Functions");
     circle_print(&c1);
     shape_print((shape *)&c1);
     shape_print((shape *)&t1);
@@ -253,37 +261,23 @@ int main(int argc, char const *argv[])
     	sumar += shape_area((shape *)&circles[i]);;
     }
     // print overall shape area
-	printf("sum area%f\n",sumar );
+	printf("boring overall sum over array: %f\n",sumar );
 
     free(circles);	
 
-    /*
-    shape** shapearr = calloc(8, sizeof(*shapearr));
-    shape *sarr = calloc(10, )
-*/
+
     struct shapelink *root;
     struct shapelinke *actitem;
 
+    printf("Generate linked list array with random circles triangle and squares\n");
     root = malloc(sizeof(struct shapelink));
-    fill_shapellist(root, 5);
+    fill_shapellist(root, 10);
 
     print_shapellist(root);
-    print_shapellist(root);
-
-    double *akku = malloc(sizeof(double));
-    *akku = 9;
-    printf("%d\n", akku);
-
-//    root->next = 0;
-//    root->s = malloc(sizeof(struct square));
-    printf("%s %d \n", "sementation fault where are u?",shapellist_area(root,0));
-     
-    printf("%s %d \n", "sementation fault where are u?",3);
+    printf("linked shape list overall area - A: %f \n",area_shapellist(root,0));
+    printf("linked shape list overall circumference - U: %f \n",circumference_shapellist(root,0));
+    
     free_shapellist(root);
 
-    free(akku);
-
-
-	//free(c);
 	return 0;
 }
