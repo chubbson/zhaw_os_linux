@@ -11,7 +11,7 @@
 #include <math.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <sys/time.h>
+#include <time.h>
 #include <string.h>
 #include "shape.h"
 #include "circle.h"
@@ -265,18 +265,14 @@ int main(int argc, char const *argv[])
 
     free(circles);	
 
-
-    struct shapelink *root;
-    struct shapelinke *actitem;
-
     printf("Generate linked list array with random circles triangle and squares\n");
+    struct shapelink *root;
     root = malloc(sizeof(struct shapelink));
     fill_shapellist(root, 10);
 
     print_shapellist(root);
     printf("linked shape list overall area - A: %f \n",area_shapellist(root,0));
-    printf("linked shape list overall circumference - U: %f \n",circumference_shapellist(root,0));
-    
+    printf("linked shape list overall circumference - U: %f \n",circumference_shapellist(root,0)); 
     free_shapellist(root);
 
 	return 0;
