@@ -5,10 +5,16 @@ CFLAGS=-Wall -g -O2 -std=gnu99 -I. -I./include -L./lib
 LIBS=-lcitsky -lm -lpthread
 
 
-all: ULock sh_ex_lock H0_99_pow_rev
+all: HDynFileReader Hmisc ULock sh_ex_lock H0_99_pow_rev
 
 clean:
-	rm -f  ULock sh_ex_lock H0_99_pow_rev lib/lib.o lib/isort.o lib/fsort.o lib/ternary-hsort.o lib/transmission-protocols.o lib/sort_common.o lib/psort.o lib/hsort.o lib/msort.o lib/fsort-metrics.o
+	rm -f  HDynFileReader Hmisc ULock sh_ex_lock H0_99_pow_rev lib/lib.o lib/isort.o lib/fsort.o lib/ternary-hsort.o lib/transmission-protocols.o lib/sort_common.o lib/psort.o lib/hsort.o lib/msort.o lib/fsort-metrics.o
+
+HDynFileReader: HDynFileReader.c lib/libcitsky.a
+	gcc $(CFLAGS) HDynFileReader.c $(LIBS) -o HDynFileReader
+
+Hmisc: Hmisc.c lib/libcitsky.a
+	gcc $(CFLAGS) Hmisc.c $(LIBS) -o Hmisc
 
 ULock: ULock.c lib/libcitsky.a
 	gcc $(CFLAGS) ULock.c $(LIBS) -o ULock
