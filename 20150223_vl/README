@@ -6,5 +6,8 @@ make all
 make clean
 
 # run normal
-./U0_99_pow
+// creating out-lowlevel.txt 
+./U0_99_pow_rev 
+
+// starting file HDynFileReader
 ./H0_99_pow_rev
