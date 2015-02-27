@@ -1,0 +1,10 @@
+
+#Makefile
+../scripts/create-make > makefile
+make 
+make all
+make clean
+
+# run normal
+./U0_99_pow
+./H0_99_pow_rev
