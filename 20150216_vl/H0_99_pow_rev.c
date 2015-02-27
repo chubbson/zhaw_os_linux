@@ -19,7 +19,7 @@ int main(int argc, char const *argv[])
   char res[6];
 
   n = 5;
-  fdout = open(FILENAME, O_WRONLY | O_CREAT);
+  fdout = open(FILENAME, O_WRONLY | O_CREAT | O_TRUNC, 0666);
   printf("fdout=%d\n", fdout);
   for(i = 99; i >= 0; i--)
   { 
