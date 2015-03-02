@@ -1,3 +1,9 @@
+/* (C) Hauronen Patronens waste of time projects!
+* https://github.com/chubbson/zhaw_os_linux
+* Author: David Hauri
+* Date: 2014-02-27
+* License: GPL v2 (See https://de.wikipedia.org/wiki/GNU_General_Public_License )
+*/
 
 #include <stdio.h>
 #include <string.h>
