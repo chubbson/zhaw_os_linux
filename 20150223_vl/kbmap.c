@@ -13,7 +13,7 @@
 
 int main(int argc, char const *argv[])
 {
-	const char *FILENAME = "out-lowlevel.txt";
+	const char *FILENAME = argv[1]; //s"out-lowlevel.txt";
   int f = open(FILENAME, O_RDONLY, 0666);
   handle_error(f, "fopen", PROCESS_EXIT);
   int pid = getpid();
