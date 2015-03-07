@@ -12,7 +12,6 @@
 static void sig_pipe(int); // signal handler
 static struct termios orig_termios_struct;
 
-
 int main(int argc, char const *argv[])
 {
 	int c; 
@@ -20,12 +19,6 @@ int main(int argc, char const *argv[])
 	pid_t pid;
 	char buf[2];
 	char line[MAXLINE];
-  char *FILENAME = "out-lowlevel.txt";
-
-	if (argc >= 2)
-	{
-		FILENAME = argv[0];
-	}
 
 	if(signal(SIGPIPE, sig_pipe) == SIG_ERR)
 		err_sys("signal error");
@@ -104,7 +97,7 @@ int main(int argc, char const *argv[])
 			close(fd2[1]);
 		}
 		
-		if(execl("./kbmap","kbmap", FILENAME,(char *)0) < 0)
+		if(execl("./kbmap","kbmap",(char *)0) < 0)
 			err_sys("execl error");
 	}
 	exit(0);

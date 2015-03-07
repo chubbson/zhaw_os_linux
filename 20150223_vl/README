@@ -14,6 +14,3 @@ make clean
 
 // starting HDynFileReader
 ./H0_99_pow_rev
-
-// start kbin fork an popen coprocesses as hw etc. 
-./kbin
