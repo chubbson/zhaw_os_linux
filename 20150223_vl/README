@@ -1,3 +1,5 @@
+#http://git-scm.com/docs/gitignore
+#'git reset' to revert git add before commit
 
 #Makefile
 ../scripts/create-make > makefile

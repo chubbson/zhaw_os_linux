@@ -5,6 +5,10 @@
 *~
 *.*c_
 */*
+**.o
+**.o_
+!**/lib/
+!**/include/
 !.c
 !scripts/*make
 !scripts/add-ignored

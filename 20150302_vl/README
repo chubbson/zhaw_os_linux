@@ -7,7 +7,7 @@ make clean
 
 # run normal
 // creating out-lowlevel.txt 
-./U0_99_pow_rev 
+./H0_99_pow_rev 
 
-// starting file HDynFileReader
-./H0_99_pow_rev
+// simple file reader, with buffering
+./Hmisc
