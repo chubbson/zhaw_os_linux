@@ -5,6 +5,21 @@ git reset
 git stash save --keep-index
 git stash drop
 
+#write 
+printf("=====HUELP=====\n");
+write(STDOUT_FILENO,"=====HELP=====\n",15);
+write(STDOUT_FILENO,"q: quit program\n",16);
+fflush(stdout);
+
+Output: 
+=====HELP=====
+it program
+=====HUELP=====
+
+Desc: 
+printf will be released (flushed) when fflush was called ;)
+
+
 #Makefile
 ../scripts/create-make > makefile
 make 

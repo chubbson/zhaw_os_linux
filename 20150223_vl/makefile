@@ -5,10 +5,10 @@ CFLAGS=-Wall -g -O2 -std=gnu99 -I. -I./include -L./lib
 LIBS=-lcitsky -lm -lpthread
 
 
-all: HDynFileReader kb kbevaluator Hmisc ULock kbmap HPipessample sh_ex_lock H0_99_pow_rev kbin
+all: HDynFileReader kb kbevaluator kbpopen kbopen2 Hmisc ULock kbmap kbfilter HPipessample sh_ex_lock H0_99_pow_rev kbin kbfilter2
 
 clean:
-	rm -f  HDynFileReader kb kbevaluator Hmisc ULock kbmap HPipessample sh_ex_lock H0_99_pow_rev kbin lib/error.o lib/lib.o lib/isort.o lib/fsort.o lib/ternary-hsort.o lib/transmission-protocols.o lib/sort_common.o lib/exec1.o lib/psort.o lib/hsort.o lib/errorlog.o lib/msort.o lib/fsort-metrics.o
+	rm -f  HDynFileReader kb kbevaluator kbpopen kbopen2 Hmisc ULock kbmap kbfilter HPipessample sh_ex_lock H0_99_pow_rev kbin kbfilter2 lib/error.o lib/lib.o lib/isort.o lib/fsort.o lib/ternary-hsort.o lib/transmission-protocols.o lib/sort_common.o lib/exec1.o lib/psort.o lib/hsort.o lib/errorlog.o lib/msort.o lib/fsort-metrics.o
 
 HDynFileReader: HDynFileReader.c lib/libcitsky.a
 	gcc $(CFLAGS) HDynFileReader.c $(LIBS) -o HDynFileReader
@@ -19,6 +19,12 @@ kb: kb.c lib/libcitsky.a
 kbevaluator: kbevaluator.c lib/libcitsky.a
 	gcc $(CFLAGS) kbevaluator.c $(LIBS) -o kbevaluator
 
+kbpopen: kbpopen.c lib/libcitsky.a
+	gcc $(CFLAGS) kbpopen.c $(LIBS) -o kbpopen
+
+kbopen2: kbopen2.c lib/libcitsky.a
+	gcc $(CFLAGS) kbopen2.c $(LIBS) -o kbopen2
+
 Hmisc: Hmisc.c lib/libcitsky.a
 	gcc $(CFLAGS) Hmisc.c $(LIBS) -o Hmisc
 
@@ -27,6 +33,9 @@ ULock: ULock.c lib/libcitsky.a
 
 kbmap: kbmap.c lib/libcitsky.a
 	gcc $(CFLAGS) kbmap.c $(LIBS) -o kbmap
+
+kbfilter: kbfilter.c lib/libcitsky.a
+	gcc $(CFLAGS) kbfilter.c $(LIBS) -o kbfilter
 
 HPipessample: HPipessample.c lib/libcitsky.a
 	gcc $(CFLAGS) HPipessample.c $(LIBS) -o HPipessample
@@ -39,6 +48,9 @@ H0_99_pow_rev: H0_99_pow_rev.c lib/libcitsky.a
 
 kbin: kbin.c lib/libcitsky.a
 	gcc $(CFLAGS) kbin.c $(LIBS) -o kbin
+
+kbfilter2: kbfilter2.c lib/libcitsky.a
+	gcc $(CFLAGS) kbfilter2.c $(LIBS) -o kbfilter2
 
 lib/error.o: lib/error.c
 	gcc -c $(CFLAGS) lib/error.c -o lib/error.o
