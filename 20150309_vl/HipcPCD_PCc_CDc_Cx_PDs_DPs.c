@@ -1,15 +1,16 @@
 /* (C) Hauronen Patronens waste of time projects!
-* https://github.com/chubbson/zhaw_os_linux
-* Author: David Hauri
-* Date: 2014-03-01p
-* License: GPL v2 (See https://de.wikipedia.org/wiki/GNU_General_Public_License )
-*/
+ * https://github.com/chubbson/zhaw_os_linux
+ * Author: David Hauri
+ * Date: 2014-03-01p
+ * License: GPL v2 (See https://de.wikipedia.org/wiki/GNU_General_Public_License )
+**/
 
 //daeomnize-group-signal.c
 
 #include <apue.h>
 #include <itskylib.h>
 #include <kb.h>
+#include <tell_wait.h>
 
 static void sig_handler(int); // signal handler
 static void sig_handlerChild(int); // signal handler
@@ -27,54 +28,72 @@ static void sig_handlerAlarm(int); // signal handler
 int main(int argc, char const *argv[])
 {
 	pid_t pid, ppid, cpid;
-//	char line[MAXLINE];
-/*
-	if(signal(SIGINT, sig_handler) == SIG_ERR)
-		err_sys("signal error");
-*/
+
+	TELL_WAIT(); // set things up for tell & wait
+
 	ppid = getpid();
-	printf("PID: %d - %s\n", ppid, "before fork" );
 
 	//generate child
 	if ((cpid = fork()) < 0) 
 		err_sys("fork error");
 
 	pid = getpid();
-	printf("Afterfork\n PID: %d\n PPID: %d\n CPID: %d\n", pid, ppid, cpid);
+	//printf("Afterfork\n PID: %d\n PPID: %d\n CPID: %d\n", pid, ppid, cpid);
 
-	if (cpid > 0) {
+	if (cpid > 0) { 
+		printf("PID: %d - Parent\n", pid);
 		// parent section 
 
-		// wait till child exits
+		// wait till child finished
+		printf("PID: %d - sending sig from parent\n", pid);
+		fflush(stdout);
+		TELL_CHILD(pid);
+
+		WAIT_CHILD(); //
+		printf("PID: %d - received sig from grandchild\n", pid);
+		fflush(stdout); 
 
 		// send daemon a signal 
-		
+
 		// wait for signal of daemon
 		//exit(0);
-	} else {
-		// child section -> cpid = 0
+	} else { 
+	  // child section -> cpid = 0
 		//printf("Afterfork chlid\n PID: %d\n PPID: %d\n CPID: %d\n", pid, ppid, cpid);
 		//exit(0);	
+
+		// send signal to parent
+			printf("PID: %d - sending sig from grandchild\n", getpid());
+		fflush(stdout);
+			TELL_PARENT(getpid()); // tell parent we're done
+
+					// receive signal from parent
+			WAIT_PARENT(); // 
+			printf("PID: %d - received sig from parent\n", getpid());
+		fflush(stdout);
+
+			
+
 
 		// generate daemon
 		if((cpid = fork()) < 0)
 			err_sys("fork error");
 
 		pid = getpid();
-		printf("AfterGrandchildfork parent\n PID: %d\n PPID: %d\n CPID: %d\n", pid, ppid, cpid);
+		//printf("AfterGrandchildfork parent\n PID: %d\n PPID: %d\n CPID: %d\n", pid, ppid, cpid);
 
 		if (cpid > 0) {
 			// child section
-			// daemon created, exit child
+			printf("PID: %d - Child\n", pid);
+
+
 			exit(0);
 		} else {
 			// grandchild section, aka daemon
-
-			// send signal to parent
-
-			// receive signal from parent
+			printf("PID: %d - GrandChild\n", pid);
 
 			// exit grandchild
+			exit(0);
 		}
 		// common child and grandchild section but grandchild already exits, so just common child section
 
