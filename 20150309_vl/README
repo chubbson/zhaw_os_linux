@@ -27,8 +27,7 @@ make all
 make clean
 
 # run normal
-// creating out-lowlevel.txt 
-./H0_99_pow_rev 
+./tellwaitsmaple
 
 
 // Hausaufgabe

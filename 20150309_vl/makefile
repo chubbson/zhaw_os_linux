@@ -5,16 +5,19 @@ CFLAGS=-Wall -g -O2 -std=gnu99 -I. -I./include -L./lib
 LIBS=-lcitsky -lm -lpthread
 
 
-all: tellwaitsmaple ipc H0_99_pow_rev HipcPCD_PCc_CDc_Cx_PDs_DPs forksample
+all: tellwaitsmaple ipc daeomonize-group-signal H0_99_pow_rev HipcPCD_PCc_CDc_Cx_PDs_DPs forksample
 
 clean:
-	rm -f  tellwaitsmaple ipc H0_99_pow_rev HipcPCD_PCc_CDc_Cx_PDs_DPs forksample lib/error.o lib/lib.o lib/isort.o lib/fsort.o lib/ternary-hsort.o lib/transmission-protocols.o lib/sort_common.o lib/exec1.o lib/sig_tell_wait.o lib/psort.o lib/hsort.o lib/errorlog.o lib/msort.o lib/fsort-metrics.o
+	rm -f  tellwaitsmaple ipc daeomonize-group-signal H0_99_pow_rev HipcPCD_PCc_CDc_Cx_PDs_DPs forksample lib/error.o lib/lib.o lib/isort.o lib/fsort.o lib/ternary-hsort.o lib/transmission-protocols.o lib/sort_common.o lib/exec1.o lib/sig_tell_wait.o lib/psort.o lib/hsort.o lib/errorlog.o lib/msort.o lib/fsort-metrics.o
 
 tellwaitsmaple: tellwaitsmaple.c lib/libcitsky.a
 	gcc $(CFLAGS) tellwaitsmaple.c $(LIBS) -o tellwaitsmaple
 
 ipc: ipc.c lib/libcitsky.a
 	gcc $(CFLAGS) ipc.c $(LIBS) -o ipc
+
+daeomonize-group-signal: daeomonize-group-signal.c lib/libcitsky.a
+	gcc $(CFLAGS) daeomonize-group-signal.c $(LIBS) -o daeomonize-group-signal
 
 H0_99_pow_rev: H0_99_pow_rev.c lib/libcitsky.a
 	gcc $(CFLAGS) H0_99_pow_rev.c $(LIBS) -o H0_99_pow_rev
