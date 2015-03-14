@@ -1,128 +1,118 @@
 /* (C) Hauronen Patronens waste of time projects!
  * https://github.com/chubbson/zhaw_os_linux
  * Author: David Hauri
- * Date: 2014-03-01p
+ * Date: 2014-03-12
  * License: GPL v2 (See https://de.wikipedia.org/wiki/GNU_General_Public_License )
 **/
 
-//daeomnize-group-signal.c
 
 #include <apue.h>
 #include <itskylib.h>
-#include <kb.h>
-#include <tell_wait.h>
 
-static void sig_handler(int); // signal handler
-static void sig_handlerChild(int); // signal handler
-static void sig_handlerAlarm(int); // signal handler
+static void charatime(char *);
+int daemonized = FALSE;
+int bla = FALSE;
 
-// HipcPCD_PCc_CDc_Cx_PDs_DPs.c
-// H = HomeWork
-// ipc = interprocess Communication
-// PCD = Parent Child Daemon
-// PCc = Parent create Child
-// CDc = Child create Daemon 
-// Cx = Exit Child
-// PDs = Parent send sig to Daemon 
-// DPs = Daemon send sig to Parent
-int main(int argc, char const *argv[])
+void printPids(char * piddesc) {
+  int pid = getpid();
+  int pgid = getpgid(pid);
+  int ppid = getppid();
+  printf("----------\n%s\npid=%d pgid=%d ppid=%d\n==========\n", piddesc, pid, pgid, ppid);
+}
+
+void signal_handler(int signo) {
+	daemonized = TRUE;
+  int pid = getpid();
+  int pgid = getpgid(pid);
+  int ppid = getppid();
+  printf("signal %d received pid=%d pgid=%d ppid=%d\n", signo, pid, pgid, ppid);
+}
+
+int main(void)
 {
-	pid_t pid, ppid, cpid;
+	pid_t pid;//, ppid; 
+	int status, retcode; 
+  pid = getpid();
+  int pgid = pid;
+  /* set pgid to pid */
+  retcode = setpgid(pid, pgid);
+  handle_error(retcode, "setpgid", PROCESS_EXIT);
 
-	TELL_WAIT(); // set things up for tell & wait
+	printPids("Parent");
+	signal(SIGUSR2, signal_handler);
 
-	ppid = getpid();
-
-	//generate child
-	if ((cpid = fork()) < 0) 
+	//ppid = getpid();
+	if ((pid = fork()) < 0){
 		err_sys("fork error");
+	} else if (pid == 0) {
+		// Child tell parent
+		printPids("Child");
 
-	pid = getpid();
-	//printf("Afterfork\n PID: %d\n PPID: %d\n CPID: %d\n", pid, ppid, cpid);
-
-	if (cpid > 0) { 
-		printf("PID: %d - Parent\n", pid);
-		// parent section 
-
-		// wait till child finished
-		printf("PID: %d - sending sig from parent\n", pid);
-		fflush(stdout);
-		TELL_CHILD(pid);
-
-		WAIT_CHILD(); //
-		printf("PID: %d - received sig from grandchild\n", pid);
-		fflush(stdout); 
-
-		// send daemon a signal 
-
-		// wait for signal of daemon
-		//exit(0);
-	} else { 
-	  // child section -> cpid = 0
-		//printf("Afterfork chlid\n PID: %d\n PPID: %d\n CPID: %d\n", pid, ppid, cpid);
-		//exit(0);	
-
-		// send signal to parent
-			printf("PID: %d - sending sig from grandchild\n", getpid());
-		fflush(stdout);
-			TELL_PARENT(getpid()); // tell parent we're done
-
-					// receive signal from parent
-			WAIT_PARENT(); // 
-			printf("PID: %d - received sig from parent\n", getpid());
-		fflush(stdout);
-
-			
-
-
-		// generate daemon
-		if((cpid = fork()) < 0)
-			err_sys("fork error");
-
+		int rootPGid = pgid; 
 		pid = getpid();
-		//printf("AfterGrandchildfork parent\n PID: %d\n PPID: %d\n CPID: %d\n", pid, ppid, cpid);
+		pgid = pid;
+	  retcode = setpgid(pid, pgid);
+	  handle_error(retcode, "setpgid", PROCESS_EXIT);
 
-		if (cpid > 0) {
-			// child section
-			printf("PID: %d - Child\n", pid);
 
+		if((pid = fork()) < 0){
+			err_sys("fork (2) error");
+	  } else if (pid != 0) {
+	  	// child
+      /* exit child, make grand child a daemon */
+			charatime("output from child\n");
+      printf("exiting child in 2s\n");
+      sleep(2);
+      exit(0);
+    } else {
+			printPids("Grand-Child");
+		  signal(SIGUSR1, signal_handler);
+			charatime("output from grand-child\n");
+
+			// wait till grand child is daemonized
+			while (! daemonized) {
+	  	  pause();
+	  	}
+
+			charatime("grand-child daemonized, sleep 5s before sendig SIGUSR2\n");
+			sleep(5);
+
+			// do not send -1, it will logoff current user.. dk why?!?
+			// sending sigusr2 to rootpgid which is the pgid form parent, so sending sigusr2 to parent
+		  retcode = kill(/*-1*/-rootPGid, SIGUSR2);
+  		handle_error(retcode, "kill sigusr2", PROCESS_EXIT);
 
 			exit(0);
-		} else {
-			// grandchild section, aka daemon
-			printf("PID: %d - GrandChild\n", pid);
+    }
 
-			// exit grandchild
-			exit(0);
-		}
-		// common child and grandchild section but grandchild already exits, so just common child section
 
-		// exit 
-	}
+	} else {
+		// parent
+		// pid = chlid pid = child groupid
+		printf("parent waiting for child\n");
+		retcode = wait(&status);
+	  handle_error(retcode, "wait", PROCESS_EXIT);
+	  printf("child terminated status=%d\n", status);
 
-	// wait till child exit
+		printPids("Parent before sending sigusr1 kill to pid which containts pid of child (it doesnt exist anymore, already exited), but pid is pgid of child and grandchild");
+
+	  retcode = kill(-pid, SIGUSR1);
+	  handle_error(retcode, "kill sigusr1", PROCESS_EXIT);
+
+	  printf("%s\n", "parent after kill, pause");
+	  // could use a neu sig handler with a glob var for this handler to drop other signals, but ... im to lazy ;) 
+	  pause();
+
+	  printf("%s\n", "parent pause finished");
+	}	
 	
-
-	// send signal 
-	// common section parent, child
-	printf("PID: %d - %s\n",pid, "before exit main" );
 	exit(0);
 }
-/*
-static void sig_handler(int signo)
-{
-   printf("Caught signal %d, coming out...\n", signo);
-   fflush(stdout);
-   //exit(1);
-}
 
-static void sig_handlerChild(int signo)
-{
-	printf("caught signal %d with sig_handlerChild", signo);
+static void charatime(char *str) {
+	char *ptr;
+	int c; 
+	setbuf(stdout, NULL);
+	for(ptr = str; (c = *ptr++) != 0;)
+		putc(c, stdout);
 }
-
-static void sig_handlerAlarm(int signo)
-{
-	printf("caught alarm signal %d with sig_handlerAlarm", signo);
-}
-*/

@@ -27,7 +27,7 @@ make all
 make clean
 
 # run normal
-./tellwaitsmaple
+./HipcPCD_PCc_CDc_Cx_PDs_DPs
 
 
 // Hausaufgabe
@@ -36,3 +36,5 @@ make clean
 // nach CHILD beendet. 
 // PARENT sendet SIGUSR1 an DAEMON
 // DAEMON Sendet SIGUSR2 an Parent
+
+// ./HipcPCD_PCc_CDc_Cx_PDs_DPs the same like tellwaitsmaple
