@@ -11,6 +11,14 @@
 
 static void charatime(char *);
 int daemonized = FALSE;
+int bla = FALSE;
+
+void printPids(char * piddesc) {
+  int pid = getpid();
+  int pgid = getpgid(pid);
+  int ppid = getppid();
+  printf("----------\n%s\npid=%d pgid=%d ppid=%d\n==========\n", piddesc, pid, pgid, ppid);
+}
 
 void signal_handler(int signo) {
 	daemonized = TRUE;
@@ -22,7 +30,7 @@ void signal_handler(int signo) {
 
 int main(void)
 {
-	pid_t pid, ppid; 
+	pid_t pid;//, ppid; 
 	int status, retcode; 
   pid = getpid();
   int pgid = pid;
@@ -30,17 +38,22 @@ int main(void)
   retcode = setpgid(pid, pgid);
   handle_error(retcode, "setpgid", PROCESS_EXIT);
 
+	printPids("Parent");
 	signal(SIGUSR2, signal_handler);
 
-	printf("Parent PID: %d\n", getpid());
-//	TELL_WAIT();
-
-	ppid = getpid();
+	//ppid = getpid();
 	if ((pid = fork()) < 0){
 		err_sys("fork error");
 	} else if (pid == 0) {
 		// Child tell parent
-		printf("Child PID: %d\n", getpid());
+		printPids("Child");
+
+		int rootPGid = pgid; 
+		pid = getpid();
+		pgid = pid;
+	  retcode = setpgid(pid, pgid);
+	  handle_error(retcode, "setpgid", PROCESS_EXIT);
+
 
 		if((pid = fork()) < 0){
 			err_sys("fork (2) error");
@@ -48,25 +61,26 @@ int main(void)
 	  	// child
       /* exit child, make grand child a daemon */
 			charatime("output from child\n");
-      printf("exiting child\n");
+      printf("exiting child in 2s\n");
       sleep(2);
       exit(0);
     } else {
-			printf("Grand-Child PID: %d\n", getpid());
-    	// grant chlid
-			//signal(SIGUSR2, signal_handler);
+			printPids("Grand-Child");
 		  signal(SIGUSR1, signal_handler);
 			charatime("output from grand-child\n");
 
+			// wait till grand child is daemonized
 			while (! daemonized) {
 	  	  pause();
 	  	}
 
-			charatime("grand-child daemonized\n");
-			sleep(3);
+			charatime("grand-child daemonized, sleep 5s before sendig SIGUSR2\n");
+			sleep(5);
 
-		  retcode = kill(-pgid, SIGUSR2);
-  		handle_error(retcode, "kill", PROCESS_EXIT);
+			// do not send -1, it will logoff current user.. dk why?!?
+			// sending sigusr2 to rootpgid which is the pgid form parent, so sending sigusr2 to parent
+		  retcode = kill(/*-1*/-rootPGid, SIGUSR2);
+  		handle_error(retcode, "kill sigusr2", PROCESS_EXIT);
 
 			exit(0);
     }
@@ -74,20 +88,24 @@ int main(void)
 
 	} else {
 		// parent
-		// Parent tell child
-		charatime("output from parent\n");
-	}
+		// pid = chlid pid = child groupid
+		printf("parent waiting for child\n");
+		retcode = wait(&status);
+	  handle_error(retcode, "wait", PROCESS_EXIT);
+	  printf("child terminated status=%d\n", status);
 
-	//parent child grand child
+		printPids("Parent before sending sigusr1 kill to pid which containts pid of child (it doesnt exist anymore, already exited), but pid is pgid of child and grandchild");
 
-	printf("parent waiting for child\n");
-	retcode = wait(&status);
-  handle_error(retcode, "wait", PROCESS_EXIT);
-  printf("child terminated status=%d\n", status);
+	  retcode = kill(-pid, SIGUSR1);
+	  handle_error(retcode, "kill sigusr1", PROCESS_EXIT);
 
-  retcode = kill(-pgid, SIGUSR1);
-  handle_error(retcode, "kill", PROCESS_EXIT);
+	  printf("%s\n", "parent after kill, pause");
+	  // could use a neu sig handler with a glob var for this handler to drop other signals, but ... im to lazy ;) 
+	  pause();
 
+	  printf("%s\n", "parent pause finished");
+	}	
+	
 	exit(0);
 }
 
