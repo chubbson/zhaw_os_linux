@@ -75,7 +75,8 @@ struct string_array split_to_array(char *content, off_t size);
 
 ssize_t readn(int fd, void *buf, size_t count);
 
-ssize_t writen(int fd, void *buf, size_t count);
+//already defined in apue.h
+//ssize_t writen(int fd, void *buf, size_t count);
 
 #endif
 
