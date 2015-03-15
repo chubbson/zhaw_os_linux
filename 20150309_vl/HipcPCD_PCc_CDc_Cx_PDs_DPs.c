@@ -11,7 +11,6 @@
 
 static void charatime(char *);
 int daemonized = FALSE;
-int bla = FALSE;
 
 void printPids(char * piddesc) {
   int pid = getpid();
@@ -30,7 +29,7 @@ void signal_handler(int signo) {
 
 int main(void)
 {
-	pid_t pid;//, ppid; 
+	pid_t pid; 
 	int status, retcode; 
   pid = getpid();
   int pgid = pid;
@@ -41,7 +40,6 @@ int main(void)
 	printPids("Parent");
 	signal(SIGUSR2, signal_handler);
 
-	//ppid = getpid();
 	if ((pid = fork()) < 0){
 		err_sys("fork error");
 	} else if (pid == 0) {

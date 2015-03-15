@@ -204,7 +204,7 @@ int main(int argc, char const *argv[])
 	  	//case NONE: 
 	  	//	printf("switch case none\n");
 	  		//fflush(stdout);
-	  		break;
+	  	//	break;
 	  	default:
     		n = sprintf(line, "switch case default\n");
 				write(STDOUT_FILENO ,line, n);

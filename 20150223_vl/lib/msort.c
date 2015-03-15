@@ -22,18 +22,16 @@ void msort(void *base,
   msort_r(base, nmemb, size, compare_extend, (void *) compare);
 }
 
-
-
 void msort_r(void *base,
              size_t nmemb,
              size_t size,
              compare_fun3 compare,
              void *arg) {
+  
   if (nmemb <= 1) {
     /* nothing to sort!! */
     return;
   }
-
 
   void *scratch = malloc(nmemb * size);
 

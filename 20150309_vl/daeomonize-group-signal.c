@@ -34,7 +34,6 @@ int main(int argc, char *argv[]) {
   int status;
   int pid = getpid();
   int pgid = pid;
-
   /* set pgid to pid */
   retcode = setpgid(pid, pgid);
   handle_error(retcode, "setpgid", PROCESS_EXIT);
@@ -46,7 +45,7 @@ int main(int argc, char *argv[]) {
 
   /* first fork() to create child */
   fork_result = fork();
-  
+
   handle_error(fork_result, "fork (1)", PROCESS_EXIT);
   if (fork_result == 0) {
     printf("In child\n");
