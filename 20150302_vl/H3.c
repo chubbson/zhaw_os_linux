@@ -26,7 +26,6 @@
 #include <read_line.h>
 #include <somecolor.h>
 
- #define MAX_BUF 1024
  #define FILENAME "test.txt"
  #define TEMPFIFO "temp.fifo"
 
@@ -34,25 +33,56 @@ enum daemon_action { START, QUIT, NUMBER, DROP };
 static void charatime(char *);
 int daemonized = FALSE;
 
-void printPids(char * piddesc) {
-  int pid = getpid();
+
+int formattedpids2buf(char * buf){
+	int pid = getpid();
   int pgid = getpgid(pid);
   int ppid = getppid();
-  printf("----------\n%s\npid=%d pgid=%d ppid=%d\n==========\n", piddesc, pid, pgid, ppid);
+  int n = sprintf(buf, "pid=" KBBLU " '%d' " RESET 
+  	                  "pgid=" KBRED " '%d' " RESET 
+  	                  "ppid=" KYEL  " '%d' " RESET, pid, pgid, ppid);
+  buf[n] = '\0';
+  return n; 
+}
+
+void printPids(char * piddesc) {
+  char buf[MAXLINE]; 
+  int n = formattedpids2buf(buf);
+  // small array excourse, just wanna know if it works that that way
+  // i know its ugly :)  
+  // cant use n cuz of these color string thing haha :) but 42 seems the answer of .... 
+  n = 42; 
+  char cdyn[n*2+2]; 
+  cdyn[n] = '\0';
+  cdyn[n*2+1] = '\0';
+  memset(&(cdyn[0]), (int)'-', n);
+  memset(&(cdyn[n+1]), (int)'=', n);
+
+  printf("%s\n", cdyn);
+ // printf("%s\n", cdyn[43]);
+
+  printf(BLKBLDBLURED "%s" RESET "\n" 
+  	     BLKBLDBLURED "+" RESET KBBLU " %s\n"
+  	     BLKBLDBLURED "+" RESET " %s\n" 
+  	     BLKBLDBLURED "%s" RESET "\n", cdyn, piddesc, buf, &(cdyn[43]));
 }
 
 void signal_handler(int signo) {
 	daemonized = TRUE;
-  int pid = getpid();
-  int pgid = getpgid(pid);
-  int ppid = getppid();
-  printf("signal %d received pid=%d pgid=%d ppid=%d\n", signo, pid, pgid, ppid);
+  char buf[MAXLINE]; 
+  /*int n = */formattedpids2buf(buf);
+  printf("signal " KGRN "%d" RESET " received %s\n", signo, buf);
 }
-void sh_doNothing(int signo){
-  int pid = getpid();
-  int pgid = getpgid(pid);
-  int ppid = getppid();
-  printf("signal %d received pid=%d pgid=%d ppid=%d\n", signo, pid, pgid, ppid);
+
+void printHelp()
+{
+	printf(RESET KBRED    "*************************************"
+		     RESET KYEL   "\n i, h, ?\t\t" RESET "- HELP"
+		     RESET KBYEL  "\n s, start\t" RESET "- Start write fifo"
+		     RESET KBCYN  "\n q, quit\t\t" RESET "- Exit program"
+		     RESET KBMAG  "\n <number>\t" RESET "- stores square in given file / pipe"
+		     RESET KBRED  "\n#####################################" RESET "\n"
+		           );
 }
 
 int main(int argc, char *argv[])
@@ -83,9 +113,6 @@ int main(int argc, char *argv[])
 	signal(SIGUSR1, signal_handler);
 
 
-
-
-
 	ppid = pid;
 	// * main forks child
 	if ((pid = fork()) < 0){
@@ -105,6 +132,7 @@ int main(int argc, char *argv[])
 			err_sys("fork (2) error");
 	  } else if (pid != 0) {
 	  	// child section
+
       // * exit child, make grand child a daemon 
 			charatime("output from child\n");
       printf("exiting child in 2s\n");
@@ -134,6 +162,8 @@ int main(int argc, char *argv[])
 
 		  if((fp_fifo = fdopen(fdread, "r")) == NULL)	
 		  	err_sys("fdopen error");
+
+		  printHelp();
 
 			int doQuit = FALSE;
 			int isStarted = FALSE;
@@ -248,6 +278,7 @@ int main(int argc, char *argv[])
 	
 	exit(0);
 }
+
 
 static void charatime(char *str) {
 	char *ptr;
