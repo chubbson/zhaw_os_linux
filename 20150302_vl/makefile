@@ -5,10 +5,10 @@ CFLAGS=-Wall -g -O2 -std=gnu99 -I. -I./include -L./lib
 LIBS=-lcitsky -lm -lpthread
 
 
-all: fopenprintfsample coprocessSample Hmisc H3 kbfilter H0_99_pow_rev forksample
+all: fopenprintfsample coprocessSample Hmisc H3 kbfilter H3fiforeader H3fifowriter H0_99_pow_rev forksample
 
 clean:
-	rm -f  fopenprintfsample coprocessSample Hmisc H3 kbfilter H0_99_pow_rev forksample lib/error.o lib/lib.o lib/isort.o lib/fsort.o lib/ternary-hsort.o lib/transmission-protocols.o lib/sort_common.o lib/read_line.o lib/exec1.o lib/clrfl.o lib/setfl.o lib/sig_tell_wait.o lib/psort.o lib/hsort.o lib/errorlog.o lib/msort.o lib/fsort-metrics.o
+	rm -f  fopenprintfsample coprocessSample Hmisc H3 kbfilter H3fiforeader H3fifowriter H0_99_pow_rev forksample lib/error.o lib/lib.o lib/isort.o lib/fsort.o lib/ternary-hsort.o lib/transmission-protocols.o lib/sort_common.o lib/read_line.o lib/exec1.o lib/clrfl.o lib/setfl.o lib/sig_tell_wait.o lib/psort.o lib/hsort.o lib/errorlog.o lib/msort.o lib/fsort-metrics.o
 
 fopenprintfsample: fopenprintfsample.c lib/libcitsky.a
 	gcc $(CFLAGS) fopenprintfsample.c $(LIBS) -o fopenprintfsample
@@ -24,6 +24,12 @@ H3: H3.c lib/libcitsky.a
 
 kbfilter: kbfilter.c lib/libcitsky.a
 	gcc $(CFLAGS) kbfilter.c $(LIBS) -o kbfilter
+
+H3fiforeader: H3fiforeader.c lib/libcitsky.a
+	gcc $(CFLAGS) H3fiforeader.c $(LIBS) -o H3fiforeader
+
+H3fifowriter: H3fifowriter.c lib/libcitsky.a
+	gcc $(CFLAGS) H3fifowriter.c $(LIBS) -o H3fifowriter
 
 H0_99_pow_rev: H0_99_pow_rev.c lib/libcitsky.a
 	gcc $(CFLAGS) H0_99_pow_rev.c $(LIBS) -o H0_99_pow_rev
