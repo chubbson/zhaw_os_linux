@@ -5,19 +5,25 @@ CFLAGS=-Wall -g -O2 -std=gnu99 -I. -I./include -L./lib
 LIBS=-lcitsky -lm -lpthread
 
 
-all: fopenprintfsample Hmisc H3 H0_99_pow_rev forksample
+all: fopenprintfsample coprocessSample Hmisc H3 kbfilter H0_99_pow_rev forksample
 
 clean:
-	rm -f  fopenprintfsample Hmisc H3 H0_99_pow_rev forksample lib/error.o lib/lib.o lib/isort.o lib/fsort.o lib/ternary-hsort.o lib/transmission-protocols.o lib/sort_common.o lib/read_line.o lib/exec1.o lib/clrfl.o lib/setfl.o lib/sig_tell_wait.o lib/psort.o lib/hsort.o lib/errorlog.o lib/msort.o lib/fsort-metrics.o
+	rm -f  fopenprintfsample coprocessSample Hmisc H3 kbfilter H0_99_pow_rev forksample lib/error.o lib/lib.o lib/isort.o lib/fsort.o lib/ternary-hsort.o lib/transmission-protocols.o lib/sort_common.o lib/read_line.o lib/exec1.o lib/clrfl.o lib/setfl.o lib/sig_tell_wait.o lib/psort.o lib/hsort.o lib/errorlog.o lib/msort.o lib/fsort-metrics.o
 
 fopenprintfsample: fopenprintfsample.c lib/libcitsky.a
 	gcc $(CFLAGS) fopenprintfsample.c $(LIBS) -o fopenprintfsample
+
+coprocessSample: coprocessSample.c lib/libcitsky.a
+	gcc $(CFLAGS) coprocessSample.c $(LIBS) -o coprocessSample
 
 Hmisc: Hmisc.c lib/libcitsky.a
 	gcc $(CFLAGS) Hmisc.c $(LIBS) -o Hmisc
 
 H3: H3.c lib/libcitsky.a
 	gcc $(CFLAGS) H3.c $(LIBS) -o H3
+
+kbfilter: kbfilter.c lib/libcitsky.a
+	gcc $(CFLAGS) kbfilter.c $(LIBS) -o kbfilter
 
 H0_99_pow_rev: H0_99_pow_rev.c lib/libcitsky.a
 	gcc $(CFLAGS) H0_99_pow_rev.c $(LIBS) -o H0_99_pow_rev

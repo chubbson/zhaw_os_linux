@@ -24,3 +24,7 @@ make clean
   retcode = kill(0, SIGUSR1);
 
 // after each catched sighandler, we need to redeclare the sighandler, otherwise the sighanlder will not be entered! 
+
+// TASKS
+ps aux
+kill <pid>

@@ -1,7 +1,7 @@
 /* (C) Hauronen Patronens waste of time projects!
  * https://github.com/chubbson/zhaw_os_linux
  * Author: David Hauri
- * Date: 2014-03-14
+ * Date: 2015-03-14
  * License: GPL v2 (See https://de.wikipedia.org/wiki/GNU_General_Public_License )
 **/
 
@@ -25,14 +25,15 @@
 #include <fcntl.h>
 #include <read_line.h>
 #include <somecolor.h>
+#include <coproc.h>
 
  #define FILENAME "test.txt"
  #define TEMPFIFO "temp.fifo"
 
-enum daemon_action { START, QUIT, NUMBER, DROP };
+enum daemon_action { START, QUIT, NUMBER, DROP, INFO };
 static void charatime(char *);
+static void	sig_pipe(int);		/* our signal handler */
 int daemonized = FALSE;
-
 
 int formattedpids2buf(char * buf){
 	int pid = getpid();
@@ -82,15 +83,19 @@ void printHelp()
 		     RESET KBCYN  "\n q, quit\t\t" RESET "- Exit program"
 		     RESET KBMAG  "\n <number>\t" RESET "- stores square in given file / pipe"
 		     RESET KBRED  "\n#####################################" RESET "\n"
-		           );
+		     );
 }
 
 int main(int argc, char *argv[])
 {
 	pid_t pid, pgid, ppid; 
 	int status, retcode; 
-	int fdread, fdwrite;
 
+	int fdread, fdwrite;
+	if (signal(SIGPIPE, sig_pipe) == SIG_ERR)
+		err_sys("signal error");
+
+	// regular work 
 	if (argc != 2)
 		err_quit("usage: %s <restofile>", argv[0]);
 
@@ -108,7 +113,7 @@ int main(int argc, char *argv[])
 	if((fdread = open(TEMPFIFO, O_RDONLY | O_NONBLOCK)) < 0)
 		handle_error(fdread, "open read", PROCESS_EXIT);
 	if((fdwrite = open(TEMPFIFO, O_WRONLY)) < 0)
-		handle_error(fdread, "open write", PROCESS_EXIT);
+		handle_error(fdwrite, "open write", PROCESS_EXIT);
 
 	signal(SIGUSR1, signal_handler);
 
@@ -141,7 +146,7 @@ int main(int argc, char *argv[])
       exit(0);
     } else {
 			printPids("Grand-Child");
-		 // signal(SIGUSR1, signal_handler);
+		  // signal(SIGUSR1, signal_handler);
 
       int i = 0;
 			// wait till grand child is daemonized, abort after 5 tries
@@ -167,19 +172,23 @@ int main(int argc, char *argv[])
 
 			int doQuit = FALSE;
 			int isStarted = FALSE;
-			for (;;) {
-   			while (fgets(buf, sizeof buf, fp_fifo) != NULL && !doQuit)
-   			{   				
+			int stopDaemonafter2minute = 0; 
+
+			while(!doQuit)
+			{	
+				while (fgets(buf, sizeof buf, fp_fifo) != NULL && !doQuit){   				
    				// replace newline with string terminator
 	        if(buf[(n=strlen(buf)-1)] == '\n')
    					buf[n] = '\0';
 
 					int nbr; 
    				enum daemon_action dact;
-				  if (strcmp(buf,"q") == 0 || strcmp(buf,"Q") == 0 || strcmp(buf,"QUIT") == 0) {
+				  if (strcmp(buf,"q") == 0 || strcmp(buf,"quit") == 0) {
 				    dact = QUIT;
-				  } else if (strcmp(buf,"s") == 0 || strcmp(buf,"S") == 0 || strcmp(buf,"START") == 0) {
+				  } else if (strcmp(buf,"s") == 0 || strcmp(buf,"start") == 0) {
 				    dact = START;
+				  } else if (strcmp(buf,"i") == 0 || strcmp(buf,"h") == 0 || strcmp(buf,"?") == 0) {
+				    dact = INFO;
 				  } else if ((nbr = atoi(buf)) != 0) {
 				    dact = NUMBER;
 				  } else {
@@ -210,6 +219,9 @@ int main(int argc, char *argv[])
 				  	  //sprintf("%d\n", nbr*nbr);
 				  		printf("%s: %d\n", "NUMBER", nbr);
 				  		break;
+				  	case INFO:
+				  		printHelp(); 
+				  		break; 
 				  	case DROP:
 				  	default:
 				  		printf("%s: \n", "Dropped msg");
@@ -217,21 +229,16 @@ int main(int argc, char *argv[])
 				  		break;
 					}	        
    			}
-   			if (doQuit == TRUE)
-   				break;
-      }
+			}
 
-      printf("%s\n","reader finished" );
+      printf("%d %s\n", getpid(), "reader finished" );
 
 		  fclose(fp_fifo);
-		  // fdread must not be closed, this should be done by fclose(fp_fifo) via fdopen(fdread)
 		  close(fdwrite);
-
-
-		  printf("Grand-Child closes in 2s\n");
-
+		  // fdread must not be closed, this should be done by fclose(fp_fifo) via fdopen(fdread)
+		  
+		  printf("%d Grand-Child closes in 2s\n", getpid());
 			sleep(2);
-
 			exit(0);
     }
 
@@ -249,7 +256,6 @@ int main(int argc, char *argv[])
 	  // pid is pid of exited child which defined it as pgid for child an grandchild
 	  retcode = kill(-pid, SIGUSR1);
 	  handle_error(retcode, "kill sigusr1", PROCESS_EXIT);
- 
 
 		int fd_fifo = fdwrite;
 	  char line[MAXLINE];
@@ -257,28 +263,23 @@ int main(int argc, char *argv[])
 
 		while (fgets(line, MAXLINE, stdin) != NULL){
 			n = strlen(line);
+			printf("%d: fgets n: %d line: '%s' \n",getpid(), n, line);
 			if(write(fd_fifo, line, n) != n)
 				err_sys("write error to named pipe");
 			if(line[n-1] == '\n')
 				line[n-1] = '\0';
-			if(strcmp(line, "q") == 0 || strcmp(line, "Q") == 0 || strcmp(line, "QUIT") == 0 )
+			if(strcmp(line, "q") == 0 || strcmp(line, "quit") == 0 )
 				break;
 		}
 
-    printf("%s\n", "after close before exit");
+    printf("%d %s\n", getpid(), "after fclose");
+	  printf("%d %s\n", getpid(), "parent finished in 5s");
 
-    printf("%s\n", "after fclose");
-	  printf("sadf %s\n", "parent finished in 10s");
-
-	  sleep(10);
+	  sleep(5);
 	}	
 
-
-	//clr_f1(fdread, O_NONBLOCK);
-	
 	exit(0);
 }
-
 
 static void charatime(char *str) {
 	char *ptr;
@@ -286,4 +287,9 @@ static void charatime(char *str) {
 	setbuf(stdout, NULL);
 	for(ptr = str; (c = *ptr++) != 0;)
 		putc(c, stdout);
+}
+
+static void sig_pipe(int signo) {
+	printf("SIGPIPE caught\n");
+	exit(1);
 }
