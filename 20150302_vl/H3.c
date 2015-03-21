@@ -263,6 +263,13 @@ int main(int argc, char *argv[])
 
 		while (fgets(line, MAXLINE, stdin) != NULL){
 			n = strlen(line);
+
+			int i = 0; 
+			for(i = 0; i < n; i++)
+			{
+				line[i] = tolower(line[i]);
+			}
+
 			printf("%d: fgets n: %d line: '%s' \n",getpid(), n, line);
 			if(write(fd_fifo, line, n) != n)
 				err_sys("write error to named pipe");
