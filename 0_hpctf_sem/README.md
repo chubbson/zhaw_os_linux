@@ -1,3 +1,7 @@
+# Concurrent C Programming / Seminar ZHAW / FS 2015 / David Hauri
+
+* https://github.com/telmich/zhaw_concurrent_c_programming_fs_2015
+
 ## Notes
 
 ###Makefile
@@ -11,9 +15,8 @@
 * ps aux
 * kill <pid>
 
-# Concurrent C Programming / Seminar ZHAW / FS 2015 / David Hauri
-
-* https://github.com/telmich/zhaw_concurrent_c_programming_fs_2015
+### Links
+* https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet
 
 ## hpctf - Hauronen Patronens Capture The Flag
 
