@@ -45,8 +45,8 @@ struct thread_info {    /* Used as argument to thread_start() */
   counterstruct  *cs;         /* Pointer to counterstruct var */   
 }; //counterstruct shared;
 
-pthread_mutex_t lock;
-int ctr = 0; 
+//pthread_mutex_t lock;
+//int ctr = 0; 
 
 void initmutarr(counterstruct* cs)
 {
@@ -151,16 +151,7 @@ int main(int argc, char *argv[])
   if (tinfo == NULL)
     err_sys("calloc");
 
-
-  if (pthread_mutex_init(&lock, NULL) != 0)
-  {
-      printf("\n mutex init failed\n");
-      return 1;
-  }
-  
-// pthread_barrier_init, 
-
-	// Create Producer
+	// Create thread per arg
   for(i = 0; i < nmax; i++)
   {
     tinfo[i].thread_num = i; 
@@ -188,11 +179,8 @@ int main(int argc, char *argv[])
     //free(res);      /* Free memory allocated by thread */
   }
 
-  pthread_mutex_destroy(&lock);
-
 
   cleanmutarr(&cs);
-
 
   print(&cs); 
 
