@@ -1,3 +1,18 @@
+#Makefile
+../scripts/create-make > makefile
+make 
+make all
+make clean
+
+// TASKS
+ps aux
+kill <pid>
+
+//HW
+./H6 out-lowlevel2.txt out-lowlevel3.txt out-lowlevel.txt > res.txt
+
+// NOTES
+
 include <pthreads.h> 
 -lptreads
 thread-id ist plattformabhängig (struct pointer long)
@@ -62,15 +77,6 @@ phtread_cond_broadcast()
 
 O(n*log n) max sort ges, wenn daten unbekannt
 
-#Makefile
-../scripts/create-make > makefile
-make 
-make all
-make clean
-
-// TASKS
-ps aux
-kill <pid>
 
 // ipc ipc2 daemon sockets. 
 // mit semaphore, 
