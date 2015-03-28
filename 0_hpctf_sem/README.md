@@ -19,7 +19,7 @@
 
 ## Termine
 
-* (Done) Kick-Off ZL 4.10                   2015-03-11-1700 CET
+* **(Done)** Kick-Off ZL 4.10                   2015-03-11-1700 CET
 * Angabe git repositories                   2015-03-15-2359 CET
 ** Via Mail inklusive ZHAW Kürzel
 * EBS-Eintrag                               2015-03-20-2359 CET
@@ -27,8 +27,8 @@
 * 2. Zwischenstandsbericht                  2015-05-01-2359 CEST
 * Abgabe Arbeiten:                          2015-06-21-2359 CEST
 * Präsentation  ZL O4.10                    2015-07-01-1700 CEST
-* (nur Dozent) Noteneingabe                 KW 30
-* (nur Dozent) Späteste Abgabe Notenblatt   2015-07-26
+* ~~(nur Dozent) Noteneingabe~~                KW 30
+* ~~(nur Dozent) Späteste Abgabe Notenblat~~    2015-07-26
 
 ## Abgabe 
 
@@ -39,7 +39,7 @@
 
 ### Abgabebedingungen
 
-* (Done) git repo auf github vorhanden
+* **(Done)** git repo auf github vorhanden
  * https://github.com/chubbson/zhaw_os_linux/tree/master/0_hpctf_sem
 * Applikation lauffähig unter Linux
 * Nach "make" Eingabe existiert (somit auch ein Makefile!)
