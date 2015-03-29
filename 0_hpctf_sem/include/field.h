@@ -8,8 +8,8 @@
 #ifndef _LIB_HPWOTP_FIELD
 #define _LIB_HPWOTP_FIELD
 
-// #include <apue.h>
-//#include <itskylib.h>
+#include <apue.h>
+#include <itskylib.h>
 #include <pthread.h>
 
 typedef struct {
