@@ -28,10 +28,12 @@ typedef struct {
 int take(fldstruct *fs, int y, int x, int player)
 {
 	// lock field at x y
+	pthread_mutex_lock(&fs->mutfield[y][x]);
 	fs->field[y][x] = player;
-	return 0;
 	// send taken to player
 	// unlock 
+	pthread_mutex_unlock(&fs->mutfield[y][x]);
+	return 0;
 }
 
 int main(int argc, char const *argv[])
