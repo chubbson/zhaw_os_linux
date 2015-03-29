@@ -15,7 +15,7 @@
 typedef struct {
 	int n; // side length
   int** field; // field
-  pthread_mutex_t mutfield[4][4];
+  pthread_mutex_t** mutfield;
 } fldstruct;
 
 void initfield(fldstruct *fs, int n);

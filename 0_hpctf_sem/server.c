@@ -25,7 +25,14 @@ typedef struct {
 */
 
 
-//int take
+int take(fldstruct *fs, int y, int x, int player)
+{
+	// lock field at x y
+	fs->field[y][x] = player;
+	return 0;
+	// send taken to player
+	// unlock 
+}
 
 int main(int argc, char const *argv[])
 {
@@ -37,12 +44,12 @@ int main(int argc, char const *argv[])
   fldstruct fs;
   initfield(&fs, n);
 
-  fs.field[1][1] = 1; 
-  fs.field[1][2] = 2; 
-  fs.field[1][3] = 3;
-  fs.field[2][2] = 4; 
-  fs.field[3][2] = 5; 
-  fs.field[3][3] = 6; 
+  take(&fs, 1,1, 1);
+  take(&fs, 1,2, 2);
+  take(&fs, 1,3, 3);
+  take(&fs, 2,2, 4);
+  take(&fs, 3,2, 5);
+  take(&fs, 3,3, 6);
 
   printf("n: %d\n", n);
   printfield(&fs);

@@ -1,3 +1,10 @@
+/* (C) Hauronen Patronens waste of time projects!
+ * https://github.com/chubbson/zhaw_os_linux
+ * Author: David Hauri - hauridav
+ * Date: 2015-03-29
+ * License: GPL v2 (See https://de.wikipedia.org/wiki/GNU_General_Public_License )
+**/
+
 #include <somecolor.h>
 #include <field.h>
 
@@ -8,6 +15,20 @@ void initfield(fldstruct *fs, int n)
 	for (int i = 0; i < n; i++) {
 	  fs->field[i] = malloc(n * sizeof(int));
 	}
+
+	fs->mutfield = malloc(n * sizeof(pthread_mutex_t*));
+	for (int i = 0; i < n; i++) {
+	  fs->mutfield[i] = malloc(n * sizeof(pthread_mutex_t));
+	}
+
+	for(int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			if (pthread_mutex_init(&fs->mutfield[i][j],NULL) != 0) //lock, NULL)!=0)// (cs->mutarr[i]), NULL) != 0)
+		    printf("\n mutex #'%d'|'%d' in mutarr - init failed\n", i, j);
+		}
+	}
 }
 
 void freefield(fldstruct *fs)
@@ -17,6 +38,20 @@ void freefield(fldstruct *fs)
 	  free(fs->field[i]);
 	}
 	free(fs->field);
+
+	for(int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			if (pthread_mutex_destroy(&fs->mutfield[i][j]) != 0)
+	    	printf("\n mutex #'%d'|'%d' in mutarr - clean failed\n", i, j);
+		}
+	}
+
+	for (int i = 0; i < n; i++) {
+	  free(fs->mutfield[i]);
+	}
+	free(fs->mutfield);
 }
 
 void printcolfield(int i)
