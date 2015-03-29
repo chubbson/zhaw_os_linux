@@ -1,7 +1,5 @@
 # Concurrent C Programming / Seminar ZHAW / FS 2015 / David Hauri
 
-* https://github.com/telmich/zhaw_concurrent_c_programming_fs_2015
-
 ## Notes
 
 ###Makefile
@@ -17,15 +15,18 @@
 
 ### Links
 * https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet
+* https://ebs.zhaw.ch/projects/view/1741
+* https://github.com/chubbson/zhaw_os_linux/tree/master/0_hpctf_sem
+* https://github.com/telmich/zhaw_concurrent_c_programming_fs_2015
 
 ## hpctf - Hauronen Patronens Capture The Flag
 
 ## Termine
 
 * **(Done)** Kick-Off ZL 4.10                   2015-03-11-1700 CET
-* Angabe git repositories                   2015-03-15-2359 CET
+* _(In prog)_ Angabe git repositories                   2015-03-15-2359 CET
 ** Via Mail inklusive ZHAW Kürzel
-* EBS-Eintrag                               2015-03-20-2359 CET
+* **(Done)** EBS-Eintrag                               2015-03-20-2359 CET
 * 1. Zwischenstandsbericht                  2015-04-01-2359 KST
 * 2. Zwischenstandsbericht                  2015-05-01-2359 CEST
 * Abgabe Arbeiten:                          2015-06-21-2359 CEST
