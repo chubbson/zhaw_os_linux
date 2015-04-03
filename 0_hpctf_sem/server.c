@@ -8,6 +8,7 @@
 #include <apue.h>
 #include <itskylib.h>
 #include <field.h>
+#include <game.h>
 
 void usage(const char *argv)
 {
@@ -40,6 +41,7 @@ int isfinished(fldstruct *fs)
 
 int take(fldstruct *fs, int y, int x, int player)
 {
+
 	// todo: mod to phread_mutex_trylock
 	// INUSE\n
 
@@ -222,22 +224,50 @@ int main(int argc, char const *argv[])
 
   printf("n: %d\n", n);
 
+  printf("res of sizeof(fldstruct) %d\n",sizeof(fldstruct)); 
+  //fldstruct fs; 
 
-  fldstruct fs;
-  initfield(&fs, n);
+  hpctf_game * p_hpctf = inithpctf__(n);
+  printfield(p_hpctf->fs);
+  freehpctf_(p_hpctf);
+
+/*
+  hpctf_game * p_hpctf = malloc(sizeof(hpctf_game));
+  inithpctf_(p_hpctf,7);
+  printfield(p_hpctf->fs);
+  freehpctf_(p_hpctf);
+  free(p_hpctf);
+  */
+/*
+  fldstruct * fs = malloc(sizeof(fldstruct));
+  initfield(fs, 7);
+  printfield(fs);
+  freefield(fs);
+  free(fs);
+*/
+//  initfield(&fs,n);
 
 
-  someclients(&fs);
+  printf("%s\n", "222222s");
+//  printfield(&fs);
+//  freefield(&fs);
+/*
+  hpctf_game hpctf;
+  inithpctf(&hpctf, n);
 
+//  someclients(hpctf.fs));
 
+  printf("%d\n", (*hpctf.fs).n);
+  //printfield(&(*hpctf.fs));
+  printf("%d\n", (*hpctf.fs).n);
+  printf("%d\n", hpctf.testvar);
+  printf("%d\n", hpctf.testvar);
+  
+  printf("%d\n", (*hpctf.fs).n);
 
-
-
-
-  printfield(&fs);
-
-  freefield(&fs);
-
+  printf("before freehpctf\n");
+  freehpctf(&hpctf);
+*/
   exit(0);
 }
 

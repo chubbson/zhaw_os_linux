@@ -13,9 +13,17 @@
 #include <pthread.h>
 
 typedef struct {
+	pthread_mutex_t mutex; 
+	int value;
+} fld;
+
+typedef struct {
 	int n; // side length
   int** field; // field
   pthread_mutex_t** mutfield;
+
+  fld** field2;
+  fld* field2_tmp;
 } fldstruct;
 
 void initfield(fldstruct *fs, int n);
