@@ -39,7 +39,7 @@ void freefield2(fldstruct *fs)
 	free(fs->field2_tmp);
 }
 
-fldstruct * initfield_(int n)
+fldstruct * initfield(int n)
 {
 	fldstruct * p_fs = malloc(sizeof(fldstruct)); 
 	p_fs->n = n;
@@ -65,7 +65,7 @@ fldstruct * initfield_(int n)
 	return p_fs;
 }
 
-void freefield_(fldstruct *fs)
+void freefield(fldstruct *fs)
 {
 	int n = fs->n;
 	for (int i = 0; i < n; i++) {
@@ -87,68 +87,6 @@ void freefield_(fldstruct *fs)
 	}
 	free(fs->mutfield);
 	free(fs);
-}
-
-void initfield(fldstruct *fs, int n)
-{
-	fs->n = n;
-  fs->field = malloc(n * sizeof(int*));
-	for (int i = 0; i < n; i++) {
-	  fs->field[i] = malloc(n * sizeof(int));
-	}
-
-	fs->mutfield = malloc(n * sizeof(pthread_mutex_t*));
-	for (int i = 0; i < n; i++) {
-	  fs->mutfield[i] = malloc(n * sizeof(pthread_mutex_t));
-	}
-
-	for(int i = 0; i < n; i++)
-	{
-		for (int j = 0; j < n; j++)
-		{
-			printf("init %d %d\n",i,j );
-			if (pthread_mutex_init(&fs->mutfield[i][j],NULL) != 0) //lock, NULL)!=0)// (cs->mutarr[i]), NULL) != 0)
-		    printf("\n mutex #'%d'|'%d' in mutarr - init failed\n", i, j);
-		}
-	}
-}
-
-void freefield(fldstruct *fs)
-{
-	printf("freefield start\n");
-	//printf("1 n: %n\n", fs->n);
-	int n = fs->n;
-
-	printf("freefield start\n");
-
-	for (int i = 0; i < n; i++) {
-		printf("fs->field[%d]\n",i);
-	  free(fs->field[i]);
-	}
-	free(fs->field);
-
-	printf("1 n: %d\n", fs->n);
-
-	printf("2\n");
-
-	for(int i = 0; i < n; i++)
-	{
-		for (int j = 0; j < n; j++)
-		{
-			printf("%d %d\n",i,j );
-
-			// segmentation fault core dump ....
-			if (pthread_mutex_destroy(&fs->mutfield[i][j]) != 0)
-	    	printf("\n mutex #'%d'|'%d' in mutarr - clean failed\n", i, j);
-		}
-	}
-
-	printf("3\n");
-
-	for (int i = 0; i < n; i++) {
-	  free(fs->mutfield[i]);
-	}
-	free(fs->mutfield);
 }
 
 void printcolfield(int i)

@@ -21,7 +21,7 @@ typedef struct {
   int testvar;
 } hpctf_game;
 
-void inithpctf(hpctf_game *hpctf, int mapsize);
+hpctf_game * inithpctf(int mapsize);
 void freehpctf(hpctf_game *hpctf); 
 void logon(hpctf_game*);
 void logoff(hpctf_game*);

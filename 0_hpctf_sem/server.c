@@ -227,9 +227,9 @@ int main(int argc, char const *argv[])
   printf("res of sizeof(fldstruct) %d\n",sizeof(fldstruct)); 
   //fldstruct fs; 
 
-  hpctf_game * p_hpctf = inithpctf__(n);
+  hpctf_game * p_hpctf = inithpctf(n);
   printfield(p_hpctf->fs);
-  freehpctf_(p_hpctf);
+  freehpctf(p_hpctf);
 
 /*
   hpctf_game * p_hpctf = malloc(sizeof(hpctf_game));

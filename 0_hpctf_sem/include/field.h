@@ -26,7 +26,7 @@ typedef struct {
   fld* field2_tmp;
 } fldstruct;
 
-void initfield(fldstruct *fs, int n);
+fldstruct * initfield(int n);
 void freefield(fldstruct *fs);
 void printcolfield(int i);
 void printfield(fldstruct *fs);
