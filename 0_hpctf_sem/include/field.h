@@ -18,18 +18,8 @@ typedef struct {
 } square;
 
 typedef struct {
-	pthread_mutex_t mutex; 
-	int value;
-} fld;
-
-typedef struct {
 	int n; // side length
-  int** field; // field
-  pthread_mutex_t** mutfield;
-  square** fld_of_sqr; 
-
-  fld** field2;
-  fld* field2_tmp;
+  square** field; 
 } fldstruct;
 
 fldstruct * initfield(int n);

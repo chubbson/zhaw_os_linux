@@ -27,12 +27,12 @@ typedef struct {
 int isfinished(fldstruct *fs)
 {
 	int n = fs->n;
-	int res = fs->field[0][0]; 
+	int res = fs->field[0][0].value; 
 	for (int y = 0; y < n; y++)
 	{
 		for (int x = 0; x < n; x++)
 		{
-			if(res != fs->field[y][x])
+			if(res != fs->field[y][x].value)
 				return 0;
 		}
 	}
@@ -46,11 +46,11 @@ int take(fldstruct *fs, int y, int x, int player)
 	// INUSE\n
 
 	// lock field at x y
-	pthread_mutex_lock(&fs->mutfield[y][x]);
-	fs->field[y][x] = player;
+	pthread_mutex_lock(&fs->field[y][x].mutex);
+	fs->field[y][x].value = player;
 	// send taken to player
 	// unlock 
-	pthread_mutex_unlock(&fs->mutfield[y][x]);
+	pthread_mutex_unlock(&fs->field[y][x].mutex);
 
 	int res = isfinished(fs); 
 	if(res > 0)
