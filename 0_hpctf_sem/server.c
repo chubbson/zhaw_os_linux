@@ -229,6 +229,9 @@ int main(int argc, char const *argv[])
 
   hpctf_game * p_hpctf = inithpctf(n);
   printfield(p_hpctf->fs);
+
+  someclients(p_hpctf->fs);
+
   freehpctf(p_hpctf);
 
 /*
