@@ -234,43 +234,9 @@ int main(int argc, char const *argv[])
 
   freehpctf(p_hpctf);
 
-/*
-  hpctf_game * p_hpctf = malloc(sizeof(hpctf_game));
-  inithpctf_(p_hpctf,7);
-  printfield(p_hpctf->fs);
-  freehpctf_(p_hpctf);
-  free(p_hpctf);
-  */
-/*
-  fldstruct * fs = malloc(sizeof(fldstruct));
-  initfield(fs, 7);
-  printfield(fs);
-  freefield(fs);
-  free(fs);
-*/
-//  initfield(&fs,n);
-
 
   printf("%s\n", "222222s");
-//  printfield(&fs);
-//  freefield(&fs);
-/*
-  hpctf_game hpctf;
-  inithpctf(&hpctf, n);
 
-//  someclients(hpctf.fs));
-
-  printf("%d\n", (*hpctf.fs).n);
-  //printfield(&(*hpctf.fs));
-  printf("%d\n", (*hpctf.fs).n);
-  printf("%d\n", hpctf.testvar);
-  printf("%d\n", hpctf.testvar);
-  
-  printf("%d\n", (*hpctf.fs).n);
-
-  printf("before freehpctf\n");
-  freehpctf(&hpctf);
-*/
   exit(0);
 }
 
