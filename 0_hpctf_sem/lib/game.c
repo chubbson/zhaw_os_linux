@@ -14,7 +14,6 @@
 hpctf_game * inithpctf(int mapsize)
 {
   hpctf_game * p_hpctf = malloc(sizeof(hpctf_game));
- // fldstruct * fs = initfield_(mapsize);
   p_hpctf->fs = initfield(mapsize);
   sem_init(&p_hpctf->freeplayerslots, 0, 6); // threadshared, 6 player slots
   p_hpctf->gamestate = WAITING4PLAYERS;
