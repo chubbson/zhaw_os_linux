@@ -1,0 +1,6 @@
+Hello, World!
+(CreateFile/WriteFile/CloseHandle)
+(2)
+
++++++++++(1)
+
