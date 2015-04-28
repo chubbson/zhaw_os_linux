@@ -1,0 +1,41 @@
+#Makefile
+../scripts/create-make > makefile
+make 
+make all
+make clean
+
+// TASKS
+ps aux
+kill <pid>
+
+
+// barriere 
+// 9 threads- 
+// warten bis alle fertig. 
+// neu aufteilen. jeder thread hat 
+
+// conditions
+// pthread_cond_t
+// pthread_cond_init
+// pthread_cond_wait timedwaid
+// pthread_cond_signal
+// pthread_cond_broadcast
+
+// pthread once
+
+// mutexe on shared memory: 
+// thread-onse.ch
+// mutex-attr-threads.c (falsches bsp)
+// icp/mutex-attr-ipc.c
+// mutex-ipc.c( funktioniert nicht da er die attribute nicht benutzt)
+
+
+// thread private daten
+
+// uebungsaufgabe
+// - thread private data verwenden 
+// - programm thrad-sort-once-c verwenden
+// - thread-sortonce-pd.c oä machen
+// - verwendet thread preivate data statt globaler variablen file_name, content, selected_sort_type
+// - dafür pthread_key_t key oder pthread_key_t *key zusätzlich global
+// - ideal/optional: gibt es neine möglichkeit das unabhänging von der main-methode zu initialisierten
