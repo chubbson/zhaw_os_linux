@@ -15,7 +15,6 @@
 #include <stdio.h>
 #include "include/errorhandler.h"
 
-#include <string.h>
 
 #define BUF_SIZE10 10
 
